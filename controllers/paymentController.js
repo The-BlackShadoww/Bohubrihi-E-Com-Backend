@@ -5,6 +5,7 @@ const { CartItem } = require("../models/cartItem");
 const { Profile } = require("../models/profile");
 const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
+const path = require("path");
 
 //! Request a session
 //! Payment process
@@ -58,7 +59,8 @@ module.exports.initPayment = async (req, res) => {
 
     //! Set the urls
     payment.setUrls({
-        success: "yoursite.com/success",
+        success:
+            "https://bohubrihi-e-com-backend-app.onrender.com/api/payment/success",
         fail: "yoursite.com/fail",
         cancel: "yoursite.com/cancel",
         ipn: "https://bohubrihi-e-com-backend-app.onrender.com/api/payment/ipn",
@@ -120,4 +122,8 @@ module.exports.initPayment = async (req, res) => {
         await order.save();
     }
     return res.status(200).send(response);
+};
+
+module.exports.paymentSuccess = async (req, res) => {
+    res.sendFile(path.join(__basedir + "public/success.html"));
 };
