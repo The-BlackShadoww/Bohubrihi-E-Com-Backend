@@ -40,7 +40,7 @@ module.exports.initPayment = async (req, res) => {
         success: "yoursite.com/success",
         fail: "yoursite.com/fail",
         cancel: "yoursite.com/cancel",
-        ipn: "yoursite.com/ipn",
+        ipn: "https://bohubrihi-e-com-backend-app.onrender.com/api/payment/ipn",
     });
 
     //! Set order details
