@@ -15,7 +15,7 @@ module.exports.ipn = async (req, res) => {
     // console.log(req.body);
     const payment = new Payment(req.body);
     const tran_id = payment["tran_id"];
-    if (payment["status"] === "VALID ") {
+    if (payment["status"] === "VALID") {
         const order = await Order.updateOne(
             { transaction_id: tran_id },
             { status: "Complete" }
