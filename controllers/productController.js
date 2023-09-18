@@ -213,9 +213,7 @@ module.exports.filterProducts = async (req, res) => {
 //todo ==> Modifications
 
 module.exports.getOrderedProducts = async (req, res) => {
-    console.log(req.body);
-    let order = req.body.order === "asc" ? -1 : 1;
-    console.log(order);
+    let order = req.body.order === "asc" ? 1 : -1;
     let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
 
     const products = await Product.find()
