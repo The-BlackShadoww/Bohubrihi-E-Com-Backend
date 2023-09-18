@@ -67,14 +67,15 @@ module.exports.getProducts = async (req, res) => {
     // console.log(req.query);
     let order = req.query.order === "desc" ? -1 : 1;
     let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
-    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 4;
     //todo ==>> modified --> skip
     let skip = req.query.skip ? parseInt(req.query.skip) : 0;
+    console.log(skip);
     const products = await Product.find()
         .select({ photo: 0, description: 0 })
         .sort({ [sortBy]: order }) //* if you want to use variable as property name write this inside a [].
         .limit(limit)
-        .skip(skip)
+        .skip(skip * limit)
         .populate("category", "name");
     // .populate("category","name createdAt");
     return res.status(200).send(products);
