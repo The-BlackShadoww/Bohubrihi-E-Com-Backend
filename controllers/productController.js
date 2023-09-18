@@ -69,7 +69,7 @@ module.exports.getProducts = async (req, res) => {
     let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
     let limit = req.query.limit ? parseInt(req.query.limit) : 4;
     //todo ==>> modified --> skip
-    let skip = req.query.skip ? parseInt(req.query.skip) : 0;
+    let skip = req.query.skip ? req.query.skip : 0;
     console.log(skip);
     const products = await Product.find()
         .select({ photo: 0, description: 0 })
