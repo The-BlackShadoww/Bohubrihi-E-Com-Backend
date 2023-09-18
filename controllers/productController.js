@@ -213,11 +213,12 @@ module.exports.filterProducts = async (req, res) => {
 //todo ==> Modifications
 
 module.exports.getOrderedProducts = async (req, res) => {
-    let order = req.body.order === "desc" ? -1 : 1;
+    console.log(req.body);
+    let order = req.body.order === "asc" ? -1 : 1;
     console.log(order);
     let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
 
-    const products = Product.find()
+    const products = await Product.find()
         .select({ photo: 0 })
         .populate("category", "name")
         .sort({ [sortBy]: order });
