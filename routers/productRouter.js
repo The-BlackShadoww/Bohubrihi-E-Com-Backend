@@ -8,6 +8,7 @@ const {
     updateProductById,
     getPhoto,
     filterProducts,
+    getOrderedProducts,
 } = require("../controllers/productController");
 
 router.route("/").post([authorize, admin], createProduct).get(getProducts);
@@ -20,5 +21,9 @@ router
 router.route("/photo/:id").get(getPhoto);
 
 router.route("/filter").post(filterProducts);
+
+//todo ==> Modifications
+
+router.route("/order").post(getOrderedProducts);
 
 module.exports = router;

@@ -19,3 +19,22 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => {
     console.log(`Backend App running on port ${port}`);
 });
+
+//todo ==> Modified
+
+// require("dotenv/config");
+// const mongoose = require("mongoose");
+// const app = require("./app");
+
+// global.__basedir = __dirname;
+
+// mongoose
+//     .connect(process.env.MONGODB_SERVER_LOCAL)
+//     .then(() => console.log("Successfully connected to MongoDB"))
+//     .catch((err) => console.log(err, "MongoDB connection Failed!"));
+
+// const port = process.env.PORT || 3001;
+
+// app.listen(port, () => {
+//     console.log(`Backend App running on port ${port}`);
+// });

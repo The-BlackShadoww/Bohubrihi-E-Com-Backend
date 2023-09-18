@@ -61,8 +61,8 @@ module.exports.createProduct = async (req, res) => {
 
 //! --------- CREATING PRODUCT LIST -------------
 
-//* Query String
-//* query --> api/product?order=desc&sortBy=name&limit=10
+//todo Query String
+//todo query --> api/product?order=desc&sortBy=name&limit=10
 module.exports.getProducts = async (req, res) => {
     // console.log(req.query);
     let order = req.query.order === "desc" ? -1 : 1;
@@ -72,14 +72,10 @@ module.exports.getProducts = async (req, res) => {
         .select({ photo: 0, description: 0 })
         .sort({ [sortBy]: order }) //* if you want to use variable as property name write this inside a [].
         .limit(limit)
-        // .populate("category");
         .populate("category", "name");
+    // .populate("category","name createdAt");
     return res.status(200).send(products);
 };
-// module.exports.getProducts = async (req, res) => {
-//     const products = await Product.find();
-//     return res.status(200).send(products);
-// };
 
 //!--------------- get product by ID ----------------------
 module.exports.getProductById = async (req, res) => {
@@ -178,6 +174,8 @@ module.exports.filterProducts = async (req, res) => {
 
     let filters = req.body.filters;
     let args = {};
+
+    // This filter is done according to mongoDB filter rules.
     for (let key in filters) {
         if (filters[key].length > 0) {
             if (key === "price") {
@@ -201,6 +199,8 @@ module.exports.filterProducts = async (req, res) => {
             }
         }
     }
+    console.log("This is arg for product filtering: ", args);
+
     const products = await Product.find(args)
         .select({ photo: 0 })
         .populate("category", "name")
@@ -208,4 +208,22 @@ module.exports.filterProducts = async (req, res) => {
         .skip(skip)
         .limit(limit);
     return res.status(200).send(products);
+};
+
+//todo ==> Modifications
+
+module.exports.getOrderedProducts = async (req, res) => {
+    let order = req.body.order === "desc" ? -1 : 1;
+    console.log(order);
+    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+
+    const products = Product.find()
+        .select({ photo: 0 })
+        .populate("category", "name")
+        .sort({ [sortBy]: order });
+    try {
+        return res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+    }
 };
