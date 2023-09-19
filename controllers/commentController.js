@@ -7,10 +7,13 @@ module.exports.postComment = async (req, res) => {
     userComment["user"] = userId;
 
     let newComment = new Comments(userComment);
-
-    await newComment.save();
-
-    return res.status(200).send("Comment received");
+    
+    try {
+        await newComment.save();
+        return res.status(200).send("Comment received");
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports.getComment = async (req, res) => {};
