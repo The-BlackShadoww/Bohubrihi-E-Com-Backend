@@ -6,9 +6,9 @@ module.exports.postComment = async (req, res) => {
     const userComment = _.pick(req.body, ["comment", "productId"]);
     userComment["user"] = userId;
 
-    let comment = new Comments(userComment);
+    let newComment = new Comments(userComment);
 
-    await comment.save();
+    await newComment.save();
 
     return res.status(200).send("Comment received");
 };
