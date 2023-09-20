@@ -31,4 +31,4 @@ const commentSchema = new Schema({
 // Remove the unique: true option
 commentSchema.index({ user: 1 });
 
-module.exports.Comments = model("Comment", commentSchema);
+module.exports.Comments = model("Comments", commentSchema);
