@@ -15,7 +15,14 @@ module.exports.postComment = async (req, res) => {
     }
 };
 
-
-
 //! For getting comments.
-module.exports.getComment = async (req, res) => {};
+module.exports.getComment = async (req, res) => {
+    // later try to get find document according to product id
+    
+    try {
+        const comments = await Comments.find();
+        return res.status(200).send(comments);
+    } catch (err) {
+        console.log(err);
+    }
+};
