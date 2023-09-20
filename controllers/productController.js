@@ -70,7 +70,7 @@ module.exports.getProducts = async (req, res) => {
     let limit = req.query.limit ? parseInt(req.query.limit) : 4;
     //todo ==>> modified --> skip
     let skip = req.query.skip || 0;
-    
+
     const products = await Product.find()
         .select({ photo: 0, description: 0 })
         .sort({ [sortBy]: order }) //* if you want to use variable as property name write this inside a [].
@@ -225,6 +225,17 @@ module.exports.getOrderedProducts = async (req, res) => {
         .populate("category", "name")
         .sort({ [sortBy]: order });
     try {
+        return res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+module.exports.getProductsSortedByPrice = async (req, res) => {
+    let option = req.body.option;
+
+    try {
+        const products = await Product.find().sort({ price: -1 });
         return res.status(200).send(products);
     } catch (err) {
         console.log(err);
