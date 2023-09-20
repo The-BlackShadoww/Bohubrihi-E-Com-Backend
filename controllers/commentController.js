@@ -15,19 +15,7 @@ module.exports.postComment = async (req, res) => {
     }
 };
 
-//!----------------------------------------
 
-// module.exports.postComment = async (req, res) => {
-//     try {
-//         const userComment = _.pick(req.body, ["comment", "productId"]);
-
-//         let newComment = new Comments(userComment);
-//         await newComment.save();
-//         return res.status(200).send("Comment successfully posted");
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
 
 //! For getting comments.
 module.exports.getComment = async (req, res) => {};
