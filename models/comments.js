@@ -5,7 +5,6 @@ module.exports.Comments = model(
     Schema({
         user: {
             type: Schema.Types.ObjectId,
-            unique: true,
             required: true,
             ref: "User",
         },
