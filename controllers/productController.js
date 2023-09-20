@@ -2,6 +2,7 @@ const fs = require("fs");
 const _ = require("lodash");
 const formidable = require("formidable");
 const { Product, validate } = require("../models/products");
+const { Order } = require("../models/order");
 
 //! ------------ CREATING PRODUCT -------------
 module.exports.createProduct = async (req, res) => {
@@ -214,7 +215,7 @@ module.exports.filterProducts = async (req, res) => {
     return res.status(200).send(products);
 };
 
-//todo ==> Modifications
+//todo ==> ------------ Modifications ----------------
 
 module.exports.getOrderedProducts = async (req, res) => {
     let order = req.body.order === "asc" ? 1 : -1;
@@ -240,4 +241,23 @@ module.exports.getProductsSortedByPrice = async (req, res) => {
     } catch (err) {
         console.log(err);
     }
+};
+
+module.exports.getProductsSortedBySold = async (req, res) => {
+    const productCounts = await Order.aggregate([
+        { $unwind: "$cartItems" },
+        { $group: { _id: "$cartItems.product", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+    ]);
+
+    const productIds = productCounts.map((p) => p._id);
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    products.sort((a, b) => {
+        const aIndex = productIds.indexOf(a._id);
+        const bIndex = productIds.indexOf(b._id);
+        return aIndex - bIndex;
+    });
+
+    return res.status(200).send(products);
 };
