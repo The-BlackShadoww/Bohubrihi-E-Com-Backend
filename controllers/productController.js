@@ -247,17 +247,37 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     const productCounts = await Order.aggregate([
         { $unwind: "$cartItems" },
         { $group: { _id: "$cartItems.product", count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
     ]);
 
-    const productIds = productCounts.map((p) => p._id);
-    const products = await Product.find({ _id: { $in: productIds } });
+    const productSales = productCounts.map((item) => ({
+        productId: item._id,
+        count: item.count,
+    }));
 
-    products.sort((a, b) => {
-        const aIndex = productIds.indexOf(a._id);
-        const bIndex = productIds.indexOf(b._id);
-        return aIndex - bIndex;
+    const products = await Product.find();
+
+    products.forEach((product) => {
+        const sales = productSales.find(
+            (x) => x.productId.toString() === product._id.toString()
+        );
+        product.salesCount = sales ? sales.count : 0;
     });
 
+    products.sort((a, b) => b.salesCount - a.salesCount);
+
     return res.status(200).send(products);
+    //!------------------------------------------------------------
+    // const productCounts = await Order.aggregate([
+    //     { $unwind: "$cartItems" },
+    //     { $group: { _id: "$cartItems.product", count: { $sum: 1 } } },
+    //     { $sort: { count: -1 } },
+    // ]);
+    // const productIds = productCounts.map((p) => p._id);
+    // const products = await Product.find({ _id: { $in: productIds } });
+    // products.sort((a, b) => {
+    //     const aIndex = productIds.indexOf(a._id);
+    //     const bIndex = productIds.indexOf(b._id);
+    //     return aIndex - bIndex;
+    // });
+    // return res.status(200).send(products);
 };
