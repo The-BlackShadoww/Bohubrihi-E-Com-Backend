@@ -5,10 +5,11 @@ module.exports.Comments = model(
     Schema({
         user: {
             type: Schema.Types.ObjectId,
-            required: true,
             ref: "User",
         },
         productId: String,
         comment: String,
     })
 );
+
+Comments.index({ user: 1 });
