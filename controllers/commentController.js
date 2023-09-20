@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const Comments = require("../models/comments");
+const { Comments } = require("../models/comments");
 
 module.exports.postComment = async (req, res) => {
     try {
