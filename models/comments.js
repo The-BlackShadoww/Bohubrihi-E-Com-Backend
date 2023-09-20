@@ -1,12 +1,12 @@
-const { Schema, model } = require("mongoose");
+// const { Schema, model } = require("mongoose");
 
-module.exports.Comments = model(
-    "comments",
-    Schema({
-        comment: String,
-        productId: String,
-    })
-);
+// module.exports.Comments = model(
+//     "comments",
+//     Schema({
+//         comment: String,
+//         productId: String,
+//     })
+// );
 
 
 
@@ -29,18 +29,18 @@ module.exports.Comments = model(
 
 //!---------------------------------------
 
-// const { Schema, model } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-// const commentSchema = new Schema({
-//     user: {
-//         type: Schema.Types.ObjectId,
-//         ref: "User",
-//     },
-//     productId: String,
-//     comment: String,
-// });
+const commentSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    productId: String,
+    comment: String,
+});
 
-// // Remove the unique: true option
-// commentSchema.index({ user: 1 });
+// Remove the unique: true option
+commentSchema.index({ user: 1 });
 
-// module.exports.Comments = model("Comments", commentSchema);
+module.exports.Comments = model("comments", commentSchema);
