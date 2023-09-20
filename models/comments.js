@@ -9,7 +9,7 @@ module.exports.Comments = model(
             required: true,
             ref: "User",
         },
-        product: {
+        productId: {
             type: Schema.Types.ObjectId,
             ref: "Product",
         },
