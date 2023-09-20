@@ -16,4 +16,6 @@ module.exports.postComment = async (req, res) => {
     }
 };
 
+
+//! For getting comments. 
 module.exports.getComment = async (req, res) => {};
