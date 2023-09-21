@@ -284,6 +284,7 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     // return res.status(200).send(products);
 };
 
+//todo ==>> Reviews 1
 // module.exports.getProductsSortedByReviews = async (req, res) => {
 //     try {
 //         const grouping = await Comments.aggregate([
@@ -317,28 +318,60 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 //     }
 // };
 
+//todo ==>> Reviews 2
+// module.exports.getProductsSortedByReviews = async (req, res) => {
+//     try {
+//         const products = await Product.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "Comments",
+//                     localField: "_id",
+//                     foreignField: "product",
+//                     as: "comments",
+//                 },
+//             },
+//             {
+//                 $addFields: {
+//                     commentCount: { $size: "$comments" },
+//                 },
+//             },
+//             {
+//                 $sort: { commentCount: -1 },
+//             },
+//         ]);
+//         return res.status(200).send(products);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// };
+//todo ==>> Reviews 3
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
-        const products = await Product.aggregate([
+        const commentCounts = await Comment.aggregate([
             {
-                $lookup: {
-                    from: "Comments",
-                    localField: "_id",
-                    foreignField: "product",
-                    as: "comments",
+                $group: {
+                    _id: "$product",
+                    commentNum: { $sum: 1 },
                 },
             },
-            {
-                $addFields: {
-                    commentCount: { $size: "$comments" },
-                },
-            },
-            {
-                $sort: { commentCount: -1 },
-            },
-        ]);
-        return res.status(200).send(products);
+        ]).exec();
+
+        // Update the Product documents with the commentNum property
+        for (const commentCount of commentCounts) {
+            await Product.findByIdAndUpdate(commentCount._id, {
+                commentNum: commentCount.commentNum,
+            });
+        }
+
+        // Fetch all products
+        const products = await Product.find();
+
+        // Sort the Product documents based on the commentNum
+        const sortedProducts = await Product.find().sort({ commentNum: -1 });
+
+        return res.status(200).send(sortedProducts);
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        return res.status(500).send({ error: "Internal server error" });
     }
 };
