@@ -14,14 +14,28 @@
 
 // module.exports.Comments = model("comments", commentSchema);
 
+//!========================== original ===============================
+
+// const { Schema, model } = require("mongoose");
+
+// const commentSchema = new Schema({
+//     user: String,
+//     productId: String,
+//     comment: String,
+// });
+
+// module.exports.Comments = model("comments", commentSchema);
+
 //!=========================================================
 
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
-const commentSchema = new Schema({
+const commentSchema = new mongoose.Schema({
     user: String,
-    productId: String,
     comment: String,
+    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
 });
 
-module.exports.Comments = model("comments", commentSchema);
+const Comments = mongoose.model("Comment", commentSchema);
+
+module.exports = Comments;

@@ -284,33 +284,59 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     // return res.status(200).send(products);
 };
 
+// module.exports.getProductsSortedByReviews = async (req, res) => {
+//     try {
+//         const grouping = await Comments.aggregate([
+//             { $match: {} },
+//             {
+//                 $group: { _id: { $toObjectId: "$productId" } },
+//                 count: { $sum: 1 },
+//             },
+//         ]);
+
+//         const commentsGroups = grouping.map((g) => ({
+//             id: g._id,
+//             commentCount: g.count,
+//         }));
+
+//         const products = await Product.find();
+
+//         products.forEach((p) => {
+//             const comments = commentsGroups.find(
+//                 (id) => p._id.toString() === id._id.toString()
+//             );
+
+//             products.commentNum = comments ? comments.commentCount : 0;
+//         });
+
+//         products.sort((a, b) => b.commentNum - a.commentNum);
+
+//         return res.status(200).send(products);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// };
+
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
-        const grouping = await Comments.aggregate([
-            { $match: {} },
+        const products = await Product.aggregate([
             {
-                $group: { _id: { $toObjectId: "$productId" } },
-                count: { $sum: 1 },
+                $lookup: {
+                    from: "Comments",
+                    localField: "_id",
+                    foreignField: "product",
+                    as: "comments",
+                },
+            },
+            {
+                $addFields: {
+                    commentCount: { $size: "$comments" },
+                },
+            },
+            {
+                $sort: { commentCount: -1 },
             },
         ]);
-
-        const commentsGroups = grouping.map((g) => ({
-            id: g._id,
-            commentCount: g.count,
-        }));
-
-        const products = await Product.find();
-
-        products.forEach((p) => {
-            const comments = commentsGroups.find(
-                (id) => p._id.toString() === id._id.toString()
-            );
-
-            products.commentNum = comments ? comments.commentCount : 0;
-        });
-
-        products.sort((a, b) => b.commentNum - a.commentNum);
-
         return res.status(200).send(products);
     } catch (err) {
         console.log(err);
