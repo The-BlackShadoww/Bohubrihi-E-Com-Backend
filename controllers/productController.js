@@ -287,6 +287,7 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const grouping = await Comments.aggregate([
+            { $match: {} },
             { $group: { id: "$productId" }, count: { $sum: 1 } },
         ]);
 
