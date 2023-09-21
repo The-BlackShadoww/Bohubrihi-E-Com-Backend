@@ -258,7 +258,7 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 
     products.forEach((product) => {
         const sales = productSales.find(
-            (x) => x.productId.toString() === product._id.toString()
+            (id) => id.productId.toString() === product._id.toString()
         );
         product.salesCount = sales ? sales.count : 0;
     });
@@ -266,7 +266,8 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     products.sort((a, b) => b.salesCount - a.salesCount);
 
     return res.status(200).send(products);
-    //!------------------------------------------------------------
+
+    //!--------------------------- products that are sold ---------------------------------
     // const productCounts = await Order.aggregate([
     //     { $unwind: "$cartItems" },
     //     { $group: { _id: "$cartItems.product", count: { $sum: 1 } } },
