@@ -288,11 +288,11 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const grouping = await Comments.aggregate([
             { $match: {} },
-            { $group: { id: "$productId" }, count: { $sum: 1 } },
+            { $group: { _id: "$productId" }, count: { $sum: 1 } },
         ]);
 
         const commentsGroups = grouping.map((g) => ({
-            id: g.id,
+            id: g._id,
             commentCount: g.count,
         }));
 
@@ -300,10 +300,10 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 
         products.forEach((p) => {
             const comments = commentsGroups.find(
-                (id) => p._id.toString() === id.id.toString()
+                (id) => p._id.toString() === id._id.toString()
             );
 
-            products.commentNum = comments ? comments.count : 0;
+            products.commentNum = comments ? comments.commentCount : 0;
         });
 
         products.sort((a, b) => b.commentNum - a.commentNum);
