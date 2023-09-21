@@ -3,6 +3,7 @@ const _ = require("lodash");
 const formidable = require("formidable");
 const { Product, validate } = require("../models/products");
 const { Order } = require("../models/order");
+const { Comments } = require("../models/comments");
 
 //! ------------ CREATING PRODUCT -------------
 module.exports.createProduct = async (req, res) => {
@@ -281,4 +282,29 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     //     return aIndex - bIndex;
     // });
     // return res.status(200).send(products);
+};
+
+module.exports.getProductsSortedByReviews = async (req, res) => {
+    const grouping = await Comments.aggregate([
+        { $group: { id: "$productId" }, count: { $sum: 1 } },
+    ]);
+
+    const commentsGroups = grouping.map((g) => ({
+        id: g.id,
+        commentCount: g.count,
+    }));
+
+    const products = await Product.find();
+
+    products.forEach((p) => {
+        const comments = commentsGroups.find(
+            (id) => p._id.toString() === id.id.toString()
+        );
+
+        products.commentNum = comments ? comments.count : 0;
+    });
+
+    products.sort((a, b) => b.commentNum - a.commentNum);
+    
+    return res.status(200).send(products);
 };
