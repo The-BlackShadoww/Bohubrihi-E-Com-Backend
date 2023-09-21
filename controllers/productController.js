@@ -3,7 +3,7 @@ const _ = require("lodash");
 const formidable = require("formidable");
 const { Product, validate } = require("../models/products");
 const { Order } = require("../models/order");
-const { Comments } = require("../models/comments");
+const Comments = require("../models/comments");
 
 //! ------------ CREATING PRODUCT -------------
 module.exports.createProduct = async (req, res) => {
