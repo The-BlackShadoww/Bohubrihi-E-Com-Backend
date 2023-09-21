@@ -285,26 +285,30 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 };
 
 module.exports.getProductsSortedByReviews = async (req, res) => {
-    const grouping = await Comments.aggregate([
-        { $group: { id: "$productId" }, count: { $sum: 1 } },
-    ]);
+    try {
+        const grouping = await Comments.aggregate([
+            { $group: { id: "$productId" }, count: { $sum: 1 } },
+        ]);
 
-    const commentsGroups = grouping.map((g) => ({
-        id: g.id,
-        commentCount: g.count,
-    }));
+        const commentsGroups = grouping.map((g) => ({
+            id: g.id,
+            commentCount: g.count,
+        }));
 
-    const products = await Product.find();
+        const products = await Product.find();
 
-    products.forEach((p) => {
-        const comments = commentsGroups.find(
-            (id) => p._id.toString() === id.id.toString()
-        );
+        products.forEach((p) => {
+            const comments = commentsGroups.find(
+                (id) => p._id.toString() === id.id.toString()
+            );
 
-        products.commentNum = comments ? comments.count : 0;
-    });
+            products.commentNum = comments ? comments.count : 0;
+        });
 
-    products.sort((a, b) => b.commentNum - a.commentNum);
-    
-    return res.status(200).send(products);
+        products.sort((a, b) => b.commentNum - a.commentNum);
+
+        return res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+    }
 };
