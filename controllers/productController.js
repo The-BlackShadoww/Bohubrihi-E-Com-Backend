@@ -364,7 +364,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
         }
 
         // Fetch all products
-        const products = await Product.find();
+        // const products = await Product.find();
 
         // Sort the Product documents based on the commentNum
         const sortedProducts = await Product.find().sort({ commentNum: -1 });
