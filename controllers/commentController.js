@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { Comments } = require("../models/comments");
+const Comments = require("../models/comments");
 
 module.exports.postComment = async (req, res) => {
     console.log(req.body);
@@ -19,7 +19,7 @@ module.exports.postComment = async (req, res) => {
 //! For getting comments.
 // module.exports.getComment = async (req, res) => {
 //     // later try to get find document according to product id
-    
+
 //     try {
 //         const comments = await Comments.find();
 //         return res.status(200).send(comments);
