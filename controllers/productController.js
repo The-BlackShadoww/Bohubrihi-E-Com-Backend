@@ -381,67 +381,67 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 
 //todo ==>> Reviews 4
 
-// module.exports.getProductsSortedByReviews = async (req, res) => {
-//     try {
-//         const products = await Product.aggregate([
-//             {
-//                 $lookup: {
-//                     from: Comments,
-//                     pipeline: [
-//                         {
-//                             $match: {
-//                                 product: { $ref: Product, $id: "$_id" },
-//                             },
-//                         },
-//                     ],
-//                     as: "comments",
-//                 },
-//             },
-//             {
-//                 $addFields: {
-//                     commentCount: { $size: "$comments" },
-//                 },
-//             },
-//             {
-//                 $sort: { commentCount: -1 },
-//             },
-//         ]);
-
-//         return res.status(200).send(products);
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
-
-//todo ==>> Reviews 5
-
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const products = await Product.aggregate([
             {
                 $lookup: {
-                    from: "comments", // Name of the Comment collection
-                    localField: "_id",
-                    foreignField: "product",
+                    from: "comments",
+                    pipeline: [
+                        {
+                            $match: {
+                                product: { $ref: Product, $id: "$_id" },
+                            },
+                        },
+                    ],
                     as: "comments",
                 },
             },
             {
-                $project: {
-                    _id: 1,
-                    name: 1,
-                    description: 1,
-                    price: 1,
-                    category: 1,
-                    quantity: 1,
-                    commentCount: { $size: "$comments" }, // Count comments for each product
+                $addFields: {
+                    commentCount: { $size: "$comments" },
                 },
             },
-            { $sort: { commentCount: -1 } }, // Sort by commentCount in descending order
+            {
+                $sort: { commentCount: -1 },
+            },
         ]);
 
         return res.status(200).send(products);
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
     }
 };
+
+//todo ==>> Reviews 5 final
+
+// module.exports.getProductsSortedByReviews = async (req, res) => {
+//     try {
+//         const products = await Product.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "comments", // Name of the Comment collection showed in mongoDB database.
+//                     localField: "_id",
+//                     foreignField: "product",
+//                     as: "comments",
+//                 },
+//             },
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     name: 1,
+//                     description: 1,
+//                     price: 1,
+//                     category: 1,
+//                     quantity: 1,
+//                     commentCount: { $size: "$comments" },
+//                 },
+//             },
+//             { $sort: { commentCount: -1 } },
+//         ]);
+
+//         return res.status(200).send(products);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
