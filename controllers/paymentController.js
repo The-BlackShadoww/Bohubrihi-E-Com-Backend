@@ -1,6 +1,5 @@
 const SSLCommerz = require("ssl-commerz-node");
 const PaymentSession = SSLCommerz.PaymentSession;
-
 const { CartItem } = require("../models/cartItem");
 const { Profile } = require("../models/profile");
 const { Order } = require("../models/order");
@@ -109,7 +108,11 @@ module.exports.initPayment = async (req, res) => {
         product_profile: "general",
     });
 
-    response = await payment.paymentInit();
+    try {
+        response = await payment.paymentInit();
+    } catch (err) {
+        console.log(err);
+    }
 
     let order = new Order({
         cartItems: cartItems.map((item) => ({
