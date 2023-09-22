@@ -346,9 +346,10 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 
 module.exports.getSearchedProduct = async (req, res) => {
     console.log(req.body);
+    const userSearch = req.body;
     try {
-        const userSearch = req.body;
         console.log(userSearch);
+        return res.status(200).send("Request reached backend")
     } catch (err) {
         console.log(err);
     }
