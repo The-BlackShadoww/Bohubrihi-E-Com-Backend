@@ -387,8 +387,13 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
             {
                 $lookup: {
                     from: Comments,
-                    localField: "_id",
-                    foreignField: "product",
+                    pipeline: [
+                        {
+                            $match: {
+                                product: { $ref: Product, $id: "$_id" },
+                            },
+                        },
+                    ],
                     as: "comments",
                 },
             },
@@ -401,8 +406,6 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
                 $sort: { commentCount: -1 },
             },
         ]);
-
-        // products.sort((a, b) => b.commentCount - a.commentCount);
 
         return res.status(200).send(products);
     } catch (err) {
