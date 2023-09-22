@@ -284,8 +284,34 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     // return res.status(200).send(products);
 };
 
-//todo ==>> Reviews 
 
+//todo ==>> Reviews 
+module.exports.getProductsSortedByReviews = async (req, res) => {
+    try {
+        const products = await Product.aggregate([
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "product",
+                    as: "comments",
+                },
+            },
+            {
+                $addFields: {
+                    commentCount: { $size: "$comments" },
+                },
+            },
+            {
+                $sort: { commentCount: -1 },
+            },
+        ]);
+        return res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+    }
+};
+//todo ==>> Reviews Alternative
 // module.exports.getProductsSortedByReviews = async (req, res) => {
 //     try {
 //         const products = await Product.aggregate([
@@ -316,29 +342,3 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 //         console.log(error);
 //     }
 // };
-//todo ==>> Reviews 2
-module.exports.getProductsSortedByReviews = async (req, res) => {
-    try {
-        const products = await Product.aggregate([
-            {
-                $lookup: {
-                    from: "comments",
-                    localField: "_id",
-                    foreignField: "product",
-                    as: "comments",
-                },
-            },
-            {
-                $addFields: {
-                    commentCount: { $size: "$comments" },
-                },
-            },
-            {
-                $sort: { commentCount: -1 },
-            },
-        ]);
-        return res.status(200).send(products);
-    } catch (err) {
-        console.log(err);
-    }
-};
