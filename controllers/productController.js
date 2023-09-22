@@ -346,9 +346,11 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 
 module.exports.getSearchedProduct = async (req, res) => {
     try {
-        const userSearch = req.body;
+        const { product } = req.body;
 
-        const products = await Product.find().sort({ name: userSearch });
+        const products = await Product.find({
+            name: { $regex: product, $options: "i" },
+        }).sort({ name: 1 });
 
         return res.status(200).send(products);
     } catch (err) {
