@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Comments = require("../models/comments");
+const { Product, validate } = require("../models/products");
 
 module.exports.postComment = async (req, res) => {
     console.log(req.body);
@@ -16,14 +17,12 @@ module.exports.postComment = async (req, res) => {
     }
 };
 
-//! For getting comments.
-// module.exports.getComment = async (req, res) => {
-//     // later try to get find document according to product id
-
-//     try {
-//         const comments = await Comments.find();
-//         return res.status(200).send(comments);
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
+//! For getting comments. grouping
+module.exports.getComment = async (req, res) => {
+    try {
+        const comments = await Comments.find();
+        return res.status(200).send(comments);
+    } catch (err) {
+        console.log(err);
+    }
+};
