@@ -345,11 +345,12 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 //*---------- Searching products ------------------
 
 module.exports.getSearchedProduct = async (req, res) => {
-    console.log(req.body);
-    const userSearch = req.body;
     try {
-        console.log(userSearch);
-        return res.status(200).send("Request reached backend")
+        const userSearch = req.body;
+
+        const products = await Product.find().sort({ name: userSearch });
+
+        return res.status(200).send(products);
     } catch (err) {
         console.log(err);
     }
