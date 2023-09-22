@@ -386,7 +386,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
         const products = await Product.aggregate([
             {
                 $lookup: {
-                    from: "Comments",
+                    from: Comments,
                     localField: "_id",
                     foreignField: "product",
                     as: "comments",
@@ -398,7 +398,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
                 },
             },
             {
-                $sort: { commentCount: -1 }, 
+                $sort: { commentCount: -1 },
             },
         ]);
 
