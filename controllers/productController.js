@@ -381,34 +381,67 @@ module.exports.getProductsSortedBySold = async (req, res) => {
 
 //todo ==>> Reviews 4
 
+// module.exports.getProductsSortedByReviews = async (req, res) => {
+//     try {
+//         const products = await Product.aggregate([
+//             {
+//                 $lookup: {
+//                     from: Comments,
+//                     pipeline: [
+//                         {
+//                             $match: {
+//                                 product: { $ref: Product, $id: "$_id" },
+//                             },
+//                         },
+//                     ],
+//                     as: "comments",
+//                 },
+//             },
+//             {
+//                 $addFields: {
+//                     commentCount: { $size: "$comments" },
+//                 },
+//             },
+//             {
+//                 $sort: { commentCount: -1 },
+//             },
+//         ]);
+
+//         return res.status(200).send(products);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// };
+
+//todo ==>> Reviews 5
+
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const products = await Product.aggregate([
             {
                 $lookup: {
-                    from: Comments,
-                    pipeline: [
-                        {
-                            $match: {
-                                product: { $ref: Product, $id: "$_id" },
-                            },
-                        },
-                    ],
+                    from: "comments", // Name of the Comment collection
+                    localField: "_id",
+                    foreignField: "product",
                     as: "comments",
                 },
             },
             {
-                $addFields: {
-                    commentCount: { $size: "$comments" },
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    price: 1,
+                    category: 1,
+                    quantity: 1,
+                    commentCount: { $size: "$comments" }, // Count comments for each product
                 },
             },
-            {
-                $sort: { commentCount: -1 },
-            },
+            { $sort: { commentCount: -1 } }, // Sort by commentCount in descending order
         ]);
 
         return res.status(200).send(products);
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 };

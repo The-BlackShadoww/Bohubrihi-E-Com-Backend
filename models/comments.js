@@ -36,6 +36,6 @@ const commentSchema = new mongoose.Schema({
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
 });
 
-const Comments = mongoose.model("Comment", commentSchema);
+const Comments = mongoose.model("comment", commentSchema);
 
 module.exports = Comments;
