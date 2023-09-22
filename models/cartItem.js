@@ -20,7 +20,7 @@ const CartItemSchema = Schema(
             ref: "User",
             required: true,
         },
-        name: String,
+
     },
     { timestamps: true }
 );
@@ -28,7 +28,8 @@ const CartItemSchema = Schema(
 module.exports.CartItemSchema = CartItemSchema;
 module.exports.CartItem = model("CartItem", CartItemSchema);
 
-//todo ========================== original code ============================================
+
+//todo ============= try name filed =================
 
 // const { Schema, model } = require("mongoose");
 // const joi = require("joi");
@@ -52,7 +53,7 @@ module.exports.CartItem = model("CartItem", CartItemSchema);
 //             ref: "User",
 //             required: true,
 //         },
-
+//         name: String,
 //     },
 //     { timestamps: true }
 // );

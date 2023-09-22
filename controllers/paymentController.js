@@ -1,5 +1,6 @@
 const SSLCommerz = require("ssl-commerz-node");
 const PaymentSession = SSLCommerz.PaymentSession;
+
 const { CartItem } = require("../models/cartItem");
 const { Profile } = require("../models/profile");
 const { Order } = require("../models/order");
@@ -32,8 +33,7 @@ module.exports.ipn = async (req, res) => {
 
 module.exports.initPayment = async (req, res) => {
     const userId = req.user._id;
-    //! Changes made !!
-    const cartItems = await CartItem.find({ user: userId }).populate("product");
+    const cartItems = await CartItem.find({ user: userId });
     //todo profile
     const profile = await Profile.findOne({ user: userId });
     const { address1, address2, city, state, postcode, country, phone } =
@@ -108,20 +108,10 @@ module.exports.initPayment = async (req, res) => {
         product_profile: "general",
     });
 
-    try {
-        response = await payment.paymentInit();
-    } catch (err) {
-        console.log(err);
-    }
+    response = await payment.paymentInit();
 
     let order = new Order({
-        cartItems: cartItems.map((item) => ({
-            productId: item.product._id,
-            name: item.product.name,
-            price: item.price,
-            count: item.count,
-            user: item.user,
-        })),
+        cartItems: cartItems,
         user: userId,
         transaction_id: tran_id,
         address: profile,
@@ -131,22 +121,17 @@ module.exports.initPayment = async (req, res) => {
         order.sessionKey = response["sessionkey"];
         await order.save();
     }
-    try {
-        return res.status(200).send(response);
-    } catch (err) {
-        console.log(err);
-    }
+    return res.status(200).send(response);
 };
 
 module.exports.paymentSuccess = async (req, res) => {
     res.sendFile(path.join(__basedir + "/public/success.html"));
 };
 
-//todo ========================== original code ============================================
+//todo ============================ try populate =========================================
 
 // const SSLCommerz = require("ssl-commerz-node");
 // const PaymentSession = SSLCommerz.PaymentSession;
-
 // const { CartItem } = require("../models/cartItem");
 // const { Profile } = require("../models/profile");
 // const { Order } = require("../models/order");
@@ -179,7 +164,8 @@ module.exports.paymentSuccess = async (req, res) => {
 
 // module.exports.initPayment = async (req, res) => {
 //     const userId = req.user._id;
-//     const cartItems = await CartItem.find({ user: userId });
+//     //! Changes made !!
+//     const cartItems = await CartItem.find({ user: userId }).populate("product");
 //     //todo profile
 //     const profile = await Profile.findOne({ user: userId });
 //     const { address1, address2, city, state, postcode, country, phone } =
@@ -254,10 +240,20 @@ module.exports.paymentSuccess = async (req, res) => {
 //         product_profile: "general",
 //     });
 
-//     response = await payment.paymentInit();
+//     try {
+//         response = await payment.paymentInit();
+//     } catch (err) {
+//         console.log(err);
+//     }
 
 //     let order = new Order({
-//         cartItems: cartItems,
+//         cartItems: cartItems.map((item) => ({
+//             productId: item.product._id,
+//             name: item.product.name,
+//             price: item.price,
+//             count: item.count,
+//             user: item.user,
+//         })),
 //         user: userId,
 //         transaction_id: tran_id,
 //         address: profile,
@@ -267,7 +263,11 @@ module.exports.paymentSuccess = async (req, res) => {
 //         order.sessionKey = response["sessionkey"];
 //         await order.save();
 //     }
-//     return res.status(200).send(response);
+//     try {
+//         return res.status(200).send(response);
+//     } catch (err) {
+//         console.log(err);
+//     }
 // };
 
 // module.exports.paymentSuccess = async (req, res) => {
