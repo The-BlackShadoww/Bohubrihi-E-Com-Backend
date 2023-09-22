@@ -385,25 +385,37 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const products = await Product.aggregate([
             {
+                $addFields: {
+                    productId: "$_id",
+                },
+            },
+
+            {
                 $lookup: {
                     from: "comments",
                     pipeline: [
                         {
                             $match: {
-                                product: $_id,
+                                product: "$productId",
                             },
                         },
                     ],
                     as: "comments",
                 },
             },
+
             {
                 $addFields: {
-                    commentCount: { $size: "$comments" },
+                    commentCount: {
+                        $size: "$comments",
+                    },
                 },
             },
+
             {
-                $sort: { commentCount: -1 },
+                $sort: {
+                    commentCount: -1,
+                },
             },
         ]);
 
