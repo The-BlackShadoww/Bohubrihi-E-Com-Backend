@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const { User, validate } = require("../models/user");
+const { Order } = require("../models/order");
 
 //* -------------- SignUp -------------------
 module.exports.signUp = async (req, res) => {
@@ -44,8 +45,11 @@ module.exports.signIn = async (req, res) => {
 //* -------------- User Purchase History -------------------
 module.exports.getUserHistory = async (req, res) => {
     try {
-        console.log("The user who requested => ", req.user);
-        return res.status(200).send("History Request reached backend");
+        const user = req.user._id;
+
+        const orders = await Order.find({ user: user });
+
+        return res.status(200).send(orders);
     } catch (err) {
         console.log(err);
     }
