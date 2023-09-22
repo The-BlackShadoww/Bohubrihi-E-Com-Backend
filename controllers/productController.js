@@ -390,7 +390,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
                     pipeline: [
                         {
                             $match: {
-                                product: { $ref: Product, $id: "$_id" },
+                                product: $_id,
                             },
                         },
                     ],
