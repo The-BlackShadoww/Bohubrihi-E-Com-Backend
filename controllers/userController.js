@@ -40,3 +40,13 @@ module.exports.signIn = async (req, res) => {
         user: _.pick(user, ["_id", "name", "email"]),
     });
 };
+
+//* -------------- User Purchase History -------------------
+module.exports.getUserHistory = async (req, res) => {
+    try {
+        console.log("The user who requested => ", req.user);
+        return res.status(200).send("History Request reached backend");
+    } catch (err) {
+        console.log(err);
+    }
+};
