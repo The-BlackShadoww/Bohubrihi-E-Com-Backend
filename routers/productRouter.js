@@ -11,7 +11,8 @@ const {
     getOrderedProducts,
     getProductsSortedByPrice,
     getProductsSortedBySold,
-    getProductsSortedByReviews
+    getProductsSortedByReviews,
+    getSearchedProduct,
 } = require("../controllers/productController");
 
 router.route("/").post([authorize, admin], createProduct).get(getProducts);
@@ -31,5 +32,6 @@ router.route("/order").post(getOrderedProducts);
 router.route("/price").post(getProductsSortedByPrice);
 router.route("/sold").post(getProductsSortedBySold);
 router.route("/review").post(getProductsSortedByReviews);
+router.route("/search").post(getSearchedProduct);
 
 module.exports = router;

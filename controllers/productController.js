@@ -284,8 +284,7 @@ module.exports.getProductsSortedBySold = async (req, res) => {
     // return res.status(200).send(products);
 };
 
-
-//todo ==>> Reviews 
+//todo ==>> Reviews
 module.exports.getProductsSortedByReviews = async (req, res) => {
     try {
         const products = await Product.aggregate([
@@ -317,7 +316,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 //         const products = await Product.aggregate([
 //             {
 //                 $lookup: {
-//                     from: "comments", 
+//                     from: "comments",
 //                     localField: "_id",
 //                     foreignField: "product",
 //                     as: "comments",
@@ -342,3 +341,15 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
 //         console.log(error);
 //     }
 // };
+
+//*---------- Searching products ------------------
+
+module.exports.getSearchedProduct = async (req, res) => {
+    console.log(req.body);
+    try {
+        const userSearch = req.body;
+        console.log(userSearch);
+    } catch (err) {
+        console.log(err);
+    }
+};
