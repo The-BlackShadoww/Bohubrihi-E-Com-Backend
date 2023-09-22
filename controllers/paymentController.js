@@ -128,7 +128,11 @@ module.exports.initPayment = async (req, res) => {
         order.sessionKey = response["sessionkey"];
         await order.save();
     }
-    return res.status(200).send(response);
+    try {
+        return res.status(200).send(response);
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports.paymentSuccess = async (req, res) => {
