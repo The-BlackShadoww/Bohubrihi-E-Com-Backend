@@ -19,8 +19,8 @@ module.exports.createCoupon = async (req, res) => {
 
 module.exports.getCoupon = async (req, res) => {
     try {
-        const coupon = req.body.coupon;
-        const discount = await Coupon.find({ code: coupon });
+        const code = req.body.code;
+        const discount = await Coupon.find({ code: code });
         return res.status(200).send(discount);
     } catch (err) {
         console.log(err);
