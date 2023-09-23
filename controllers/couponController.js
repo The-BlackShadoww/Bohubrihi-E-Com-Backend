@@ -20,7 +20,7 @@ module.exports.createCoupon = async (req, res) => {
 module.exports.getCoupon = async (req, res) => {
     try {
         const coupon = req.body.coupon;
-        const discount = new Coupon.find({ code: coupon });
+        const discount = await Coupon.find({ code: coupon });
         return res.status(200).send(discount);
     } catch (err) {
         console.log(err);
