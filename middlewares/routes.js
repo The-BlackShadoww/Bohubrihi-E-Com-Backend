@@ -7,6 +7,7 @@ const paymentRouter = require("../routers/paymentRouter");
 //todo ==> modifications
 const commentRouter = require("../routers/commentRouter");
 const orderRouter = require("../routers/orderRouter");
+const couponRouter = require("../routers/couponRouter");
 
 module.exports = (app) => {
     app.use("/api/user", userRouter);
@@ -18,4 +19,5 @@ module.exports = (app) => {
     //todo ==> modifications
     app.use("/api/comment", commentRouter);
     app.use("/api/orders", orderRouter);
+    app.use("/api/coupon", couponRouter);
 };
