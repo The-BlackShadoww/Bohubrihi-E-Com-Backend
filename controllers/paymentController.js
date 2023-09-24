@@ -7,7 +7,8 @@ const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
+const fetch = import("node-fetch");
 
 //! Request a session
 //! Payment process
@@ -42,7 +43,7 @@ module.exports.ipn = async (req, res) => {
 
             const data = await response.json();
 
-            if (data.status === "VALID ") {
+            if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
             }
 
