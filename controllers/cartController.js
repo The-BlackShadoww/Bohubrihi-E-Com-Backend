@@ -13,25 +13,67 @@ module.exports.createCartItem = async (req, res) => {
         });
 
         if (item) return res.status(400).send("Item already exists in cart!");
+
+        const populatedCartItem = await CartItem.findOne({
+            user: req.user._id,
+            product: product,
+        }).populate("product", "name");
+
+        if (!populatedCartItem) {
+            return res.status(404).send("Product not found.");
+        }
+
+        const productName = populatedCartItem.product.name;
+
         let cartItem = new CartItem({
             price: price,
             product: product,
             user: req.user._id,
+            productName: productName, 
         });
+
         const result = await cartItem.save();
 
-        //* populate the 'product' field of the 'cartItem'
-        await result.populate("product", "name")
-
         res.status(201).send({
-            message: "Cart added to mongoDB database",
+            message: "Cart added to the MongoDB database",
             data: result,
         });
     } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(400).send(err.message);
     }
 };
+
+//*---------- original -------------
+// module.exports.createCartItem = async (req, res) => {
+//     try {
+//         let { price, product } = _.pick(req.body, ["price", "product"]);
+
+//         const item = await CartItem.findOne({
+//             user: req.user._id,
+//             product: product,
+//         });
+
+//         if (item) return res.status(400).send("Item already exists in cart!");
+//         let cartItem = new CartItem({
+//             price: price,
+//             product: product,
+//             user: req.user._id,
+//         });
+//         const result = await cartItem.save();
+
+//         //* populate the 'product' field of the 'cartItem'
+//         await result.populate("product", "name")
+
+//         res.status(201).send({
+//             message: "Cart added to mongoDB database",
+//             data: result,
+//         });
+//     } catch (err) {
+//         console.log(err.message);
+//         return res.status(400).send(err.message);
+//     }
+// };
 
 //! -------------- Getting Cart -------------
 module.exports.getCartItem = async (req, res) => {
