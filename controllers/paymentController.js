@@ -30,7 +30,7 @@ module.exports.ipn = async (req, res) => {
             formData.append("val_id", val_id);
 
             const response = await fetch(
-                (`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${store_id}&store_passwd=${store_passwd}`,
+                (`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${store_id}&store_passwd=${store_passwd}&format=json`,
                 {
                     method: "GET",
                     mode: "cors",
@@ -45,12 +45,15 @@ module.exports.ipn = async (req, res) => {
 
             if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
+            } else {
+                console.log("Still the transaction is not valid");
             }
 
             const order = await Order.updateOne(
                 { transaction_id: tran_id },
                 { status: "Complete" }
             );
+
             await CartItem.deleteMany(order.cartItems);
         } else {
             await Order.deleteOne({ transaction_id: tran_id });
