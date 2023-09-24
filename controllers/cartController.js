@@ -19,6 +19,10 @@ module.exports.createCartItem = async (req, res) => {
             user: req.user._id,
         });
         const result = await cartItem.save();
+
+        //* populate the 'product' field of the 'cartItem'
+        await result.populate("product", "name").execPopulate();
+
         res.status(201).send({
             message: "Cart added to mongoDB database",
             data: result,

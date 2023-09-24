@@ -7,7 +7,7 @@ const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
-// const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 
 //! Request a session
 //! Payment process
@@ -18,59 +18,44 @@ module.exports.ipn = async (req, res) => {
     try {
         const payment = new Payment(req.body);
         const tran_id = payment["tran_id"];
-        const ipnRequest = {
-            status: payment["status"],
-            tran_date: payment["tran_date"],
-            tran_id: payment["tran_id"],
-            val_id: payment["val_id"],
-        };
-        console.log("This is the ipn post request =>", ipnRequest);
-        
+
         if (payment["status"] === "VALID") {
             const storeId = process.env.SSLCOMMERZ_STORE_ID;
             const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD;
             const val_id = payment["val_id"];
+            console.log("validation ID => ", val_id);
 
             const formData = new FormData();
             formData.append("store_id", storeId);
             formData.append("store_passwd", storePassword);
             formData.append("val_id", val_id);
 
-            // Dynamic import of node-fetch
-            import("node-fetch")
-                .then(async (nodeFetch) => {
-                    const fetch = nodeFetch.default;
+            const response = await fetch(
+                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
+                {
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    redirect: "follow",
+                    referrer: "no-referrer",
+                }
+            );
 
-                    const response = await fetch(
-                        `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
-                        {
-                            method: "GET",
-                            mode: "cors",
-                            cache: "no-cache",
-                            credentials: "same-origin",
-                            redirect: "follow",
-                            referrer: "no-referrer",
-                        }
-                    );
+            const data = await response.json();
+            console.log("This is ipn GET request data =>", data);
 
-                    const data = await response.json();
-                    console.log("This is ipn GET request data =>", data);
-
-                    if (data.status === "VALID") {
-                        console.log("Yup! The transaction is valid");
-                        await Order.updateOne(
-                            { transaction_id: tran_id },
-                            { status: "Complete", paymentStatus: data.status }
-                        );
-                        await CartItem.deleteMany(order.cartItems);
-                    } else {
-                        console.log("Still the transaction is not valid");
-                        await Order.deleteOne({ transaction_id: tran_id });
-                    }
-                })
-                .catch((err) => {
-                    console.error("Error importing node-fetch:", err);
-                });
+            if (data.status === "VALID") {
+                console.log("Yup! The transaction is valid");
+                await Order.updateMany(
+                    { transaction_id: tran_id },
+                    { status: "Complete", paymentStatus: data.status }
+                );
+                await CartItem.deleteMany(order.cartItems);
+            } else {
+                await Order.deleteOne({ transaction_id: tran_id });
+                console.log("Still the transaction is not valid");
+            }
         } else {
             console.log("Payment is not valid");
         }
@@ -79,7 +64,7 @@ module.exports.ipn = async (req, res) => {
 
         return res.status(200).send("IPN");
     } catch (err) {
-        console.log("this catch error=> ", err);
+        console.log("this is catch error =>", err);
     }
 };
 
