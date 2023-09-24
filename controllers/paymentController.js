@@ -7,7 +7,7 @@ const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 // const fetch = import("node-fetch");
 
 //! Request a session
@@ -36,17 +36,26 @@ module.exports.ipn = async (req, res) => {
             formData.append("store_passwd", storePassword);
             formData.append("val_id", val_id);
 
-            const response = await fetch(
+            const response = await axios.get(
                 `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
                 {
-                    method: "GET",
-                    mode: "cors",
-                    cache: "no-cache",
-                    credentials: "same-origin",
-                    redirect: "follow",
-                    referrer: "no-referrer",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
             );
+
+            // const response = await fetch(
+            //     `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
+            //     {
+            //         method: "GET",
+            //         mode: "cors",
+            //         cache: "no-cache",
+            //         credentials: "same-origin",
+            //         redirect: "follow",
+            //         referrer: "no-referrer",
+            //     }
+            // );
 
             const data = await response.json();
             console.log("This is ipn GET request data =>", data);
