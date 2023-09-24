@@ -16,22 +16,20 @@ const fetch = import("node-fetch");
 //! Create an order
 
 module.exports.ipn = async (req, res) => {
+    const payment = new Payment(req.body);
+    const tran_id = payment["tran_id"];
+    const ipnRequest = {
+        status: payment["status"],
+        tran_date: payment["tran_date"],
+        tran_id: payment["tran_id"],
+        val_id: payment["val_id"],
+    };
+    console.log("This is the ipn post request =>", ipnRequest);
     try {
-        const payment = new Payment(req.body);
-        const tran_id = payment["tran_id"];
         if (payment["status"] === "VALID") {
             const storeId = process.env.SSLCOMMERZ_STORE_ID;
             const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD;
             const val_id = payment["val_id"];
-
-            const ipnRequest = {
-                status: payment["status"],
-                tran_date: payment["tran_date"],
-                tran_id: payment["tran_id"],
-                val_id: payment["val_id"],
-            };
-
-            console.log("This is the ipn request =>", ipnRequest);
 
             const formData = new FormData();
             formData.append("store_id", storeId);
@@ -72,7 +70,7 @@ module.exports.ipn = async (req, res) => {
 
         return res.status(200).send("IPN");
     } catch (err) {
-        console.log("This is catch error => ", err);
+        console.log("this catch error=> ", err);
     }
 };
 
