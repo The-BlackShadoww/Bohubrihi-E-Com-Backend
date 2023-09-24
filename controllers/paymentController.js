@@ -240,12 +240,7 @@ module.exports.initPayment = async (req, res) => {
                 .map((item) => item.count * item.price)
                 .reduce((a, b) => a + b, 0);
         }
-
-        //*--------- original ----------
-        // const total_amount = cartItems
-        //     .map((item) => item.count * item.price)
-        //     .reduce((a, b) => a + b, 0);
-
+        
         const total_item = cartItems
             .map((item) => item.count)
             .reduce((a, b) => a + b, 0);
