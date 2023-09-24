@@ -39,7 +39,7 @@ module.exports.ipn = async (req, res) => {
             formData.append("val_id", val_id);
 
             const response = await fetch(
-                (`https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${store_id}&store_passwd=${store_passwd}&format=json`,
+                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${store_id}&store_passwd=${store_passwd}&format=json`,
                 {
                     method: "GET",
                     mode: "cors",
@@ -47,7 +47,7 @@ module.exports.ipn = async (req, res) => {
                     credentials: "same-origin",
                     redirect: "follow",
                     referrer: "no-referrer",
-                })
+                }
             );
 
             const data = await response.json();
