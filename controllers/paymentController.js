@@ -39,7 +39,7 @@ module.exports.ipn = async (req, res) => {
             formData.append("val_id", val_id);
 
             const response = await fetch(
-                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${store_id}&store_passwd=${store_passwd}&format=json`,
+                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
                 {
                     method: "GET",
                     mode: "cors",
@@ -51,7 +51,7 @@ module.exports.ipn = async (req, res) => {
             );
 
             const data = await response.json();
-            console.log("This is ipn GET request =>", data);
+            console.log("This is ipn GET request data =>", data);
 
             if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
@@ -170,7 +170,7 @@ module.exports.initPayment = async (req, res) => {
         });
 
         response = await payment.paymentInit();
-        console.log("this is form paymentInit response: ", response);
+        // console.log("this is form paymentInit response: ", response);
 
         let order = new Order({
             cartItems: cartItems,
