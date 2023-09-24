@@ -55,18 +55,17 @@ module.exports.ipn = async (req, res) => {
 
             if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
+                await Order.updateOne(
+                    { transaction_id: tran_id },
+                    { status: "Complete" }
+                );
+                await CartItem.deleteMany(order.cartItems);
             } else {
                 console.log("Still the transaction is not valid");
+                await Order.deleteOne({ transaction_id: tran_id });
             }
-
-            const order = await Order.updateOne(
-                { transaction_id: tran_id },
-                { status: "Complete" }
-            );
-
-            await CartItem.deleteMany(order.cartItems);
         } else {
-            await Order.deleteOne({ transaction_id: tran_id });
+            console.log("Payment is not valid");
         }
 
         await payment.save();
