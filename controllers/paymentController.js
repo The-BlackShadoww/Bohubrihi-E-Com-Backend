@@ -7,8 +7,8 @@ const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
-// const fetch = require("node-fetch");
-const fetch = import("node-fetch");
+const fetch = require("node-fetch");
+// const fetch = import("node-fetch");
 
 //! Request a session
 //! Payment process
