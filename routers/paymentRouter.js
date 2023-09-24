@@ -1,9 +1,15 @@
 const router = require("express").Router();
-const {
+// const {
+//     initPayment,
+//     ipn,
+//     paymentSuccess,
+// } = require("../controllers/newPayment.mjs");
+import {
     initPayment,
     ipn,
     paymentSuccess,
-} = require("../controllers/newPayment.mjs");
+} from "../controllers/newPayment.mjs";
+
 const authorize = require("../middlewares/authorize");
 
 router.route("/").get(authorize, initPayment);
