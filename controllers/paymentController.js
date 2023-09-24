@@ -8,7 +8,7 @@ const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
 // const fetch = require("node-fetch");
-// const fetch = import("node-fetch");
+import fetch from "node-fetch"; 
 
 //! Request a session
 //! Payment process
@@ -16,16 +16,16 @@ const FormData = require("form-data");
 //! Create an order
 
 module.exports.ipn = async (req, res) => {
-    const payment = new Payment(req.body);
-    const tran_id = payment["tran_id"];
-    const ipnRequest = {
-        status: payment["status"],
-        tran_date: payment["tran_date"],
-        tran_id: payment["tran_id"],
-        val_id: payment["val_id"],
-    };
-    console.log("This is the ipn post request =>", ipnRequest);
     try {
+        const payment = new Payment(req.body);
+        const tran_id = payment["tran_id"];
+        const ipnRequest = {
+            status: payment["status"],
+            tran_date: payment["tran_date"],
+            tran_id: payment["tran_id"],
+            val_id: payment["val_id"],
+        };
+        console.log("This is the ipn post request =>", ipnRequest);
         if (payment["status"] === "VALID") {
             const storeId = process.env.SSLCOMMERZ_STORE_ID;
             const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD;
@@ -36,26 +36,17 @@ module.exports.ipn = async (req, res) => {
             formData.append("store_passwd", storePassword);
             formData.append("val_id", val_id);
 
-            const response = await axios.get(
+            const response = await fetch(
                 `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
                 {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    redirect: "follow",
+                    referrer: "no-referrer",
                 }
             );
-
-            // const response = await fetch(
-            //     `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
-            //     {
-            //         method: "GET",
-            //         mode: "cors",
-            //         cache: "no-cache",
-            //         credentials: "same-origin",
-            //         redirect: "follow",
-            //         referrer: "no-referrer",
-            //     }
-            // );
 
             const data = await response.json();
             console.log("This is ipn GET request data =>", data);
