@@ -29,11 +29,9 @@ module.exports.ipn = async (req, res) => {
                 tran_date: payment["tran_date"],
                 tran_id: payment["tran_id"],
                 val_id: payment["val_id"],
-                verify_key: payment["verify_key"],
-                currency_type: payment["currency_type"],
             };
 
-            console.log('This is the ipn request =>',ipnRequest);
+            console.log("This is the ipn request =>", ipnRequest);
 
             const formData = new FormData();
             formData.append("store_id", storeId);
@@ -53,6 +51,7 @@ module.exports.ipn = async (req, res) => {
             );
 
             const data = await response.json();
+            console.log("This is ipn GET request =>", data);
 
             if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
@@ -74,7 +73,7 @@ module.exports.ipn = async (req, res) => {
 
         return res.status(200).send("IPN");
     } catch (err) {
-        console.log(err);
+        console.log("This is catch error => ", err);
     }
 };
 
