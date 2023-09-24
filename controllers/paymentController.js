@@ -6,8 +6,8 @@ const { Profile } = require("../models/profile");
 const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
-const fetch = require("node-fetch");
 const FormData = require("form-data");
+// const fetch = require("node-fetch");
 
 //! Request a session
 //! Payment process
@@ -25,6 +25,7 @@ module.exports.ipn = async (req, res) => {
             val_id: payment["val_id"],
         };
         console.log("This is the ipn post request =>", ipnRequest);
+        
         if (payment["status"] === "VALID") {
             const storeId = process.env.SSLCOMMERZ_STORE_ID;
             const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD;
@@ -35,32 +36,41 @@ module.exports.ipn = async (req, res) => {
             formData.append("store_passwd", storePassword);
             formData.append("val_id", val_id);
 
-            const response = await fetch(
-                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
-                {
-                    method: "GET",
-                    mode: "cors",
-                    cache: "no-cache",
-                    credentials: "same-origin",
-                    redirect: "follow",
-                    referrer: "no-referrer",
-                }
-            );
+            // Dynamic import of node-fetch
+            import("node-fetch")
+                .then(async (nodeFetch) => {
+                    const fetch = nodeFetch.default;
 
-            const data = await response.json();
-            console.log("This is ipn GET request data =>", data);
+                    const response = await fetch(
+                        `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
+                        {
+                            method: "GET",
+                            mode: "cors",
+                            cache: "no-cache",
+                            credentials: "same-origin",
+                            redirect: "follow",
+                            referrer: "no-referrer",
+                        }
+                    );
 
-            if (data.status === "VALID") {
-                console.log("Yup! The transaction is valid");
-                await Order.updateOne(
-                    { transaction_id: tran_id },
-                    { status: "Complete" }
-                );
-                await CartItem.deleteMany(order.cartItems);
-            } else {
-                console.log("Still the transaction is not valid");
-                await Order.deleteOne({ transaction_id: tran_id });
-            }
+                    const data = await response.json();
+                    console.log("This is ipn GET request data =>", data);
+
+                    if (data.status === "VALID") {
+                        console.log("Yup! The transaction is valid");
+                        await Order.updateOne(
+                            { transaction_id: tran_id },
+                            { status: "Complete", paymentStatus: data.status }
+                        );
+                        await CartItem.deleteMany(order.cartItems);
+                    } else {
+                        console.log("Still the transaction is not valid");
+                        await Order.deleteOne({ transaction_id: tran_id });
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error importing node-fetch:", err);
+                });
         } else {
             console.log("Payment is not valid");
         }
@@ -72,6 +82,7 @@ module.exports.ipn = async (req, res) => {
         console.log("this catch error=> ", err);
     }
 };
+
 module.exports.initPayment = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -186,7 +197,6 @@ module.exports.initPayment = async (req, res) => {
 module.exports.paymentSuccess = async (req, res) => {
     res.sendFile(path.join(__basedir + "/public/success.html"));
 };
-
 
 //todo ====================== Active ==================================
 // const SSLCommerz = require("ssl-commerz-node");
