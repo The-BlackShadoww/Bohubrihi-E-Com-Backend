@@ -17,6 +17,7 @@ module.exports.createCartItem = async (req, res) => {
         if (item) return res.status(400).send("Item already exists in cart!");
 
         const getProduct = await Product.findById(product);
+        console.log("trying to get product ", getProduct);
 
         let cartItem = new CartItem({
             price: price,
