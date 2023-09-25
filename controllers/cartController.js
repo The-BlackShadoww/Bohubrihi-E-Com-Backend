@@ -6,7 +6,6 @@ module.exports.createCartItem = async (req, res) => {
     try {
         let { price, product } = _.pick(req.body, ["price", "product"]);
 
-        console.log("From CreateCart: ", price, product);
         const item = await CartItem.findOne({
             user: req.user._id,
             product: product,
@@ -19,9 +18,9 @@ module.exports.createCartItem = async (req, res) => {
             product: product,
         }).populate("product", "name");
 
-        if (!populatedCartItem) {
-            return res.status(404).send("Product not found.");
-        }
+        // if (!populatedCartItem) {
+        //     return res.status(404).send("Product not found.");
+        // }
 
         const productName = populatedCartItem.product.name;
 
@@ -29,8 +28,10 @@ module.exports.createCartItem = async (req, res) => {
             price: price,
             product: product,
             user: req.user._id,
-            productName: productName, 
+            productName: productName,
         });
+
+        console.log("this is final cart item", cartItem);
 
         const result = await cartItem.save();
 
