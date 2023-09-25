@@ -19,14 +19,13 @@ const CartItemSchema = Schema(
             ref: "User",
             required: true,
         },
-
+        productName: String,
     },
     { timestamps: true }
 );
 
 module.exports.CartItemSchema = CartItemSchema;
 module.exports.CartItem = model("CartItem", CartItemSchema);
-
 
 //todo ============= try name filed =================
 
