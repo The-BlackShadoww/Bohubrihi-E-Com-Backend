@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const { CartItem } = require("../models/cartItem");
+const { Product } = require("../models/products");
 
 //! -------------- Creating Cart -------------
 module.exports.createCartItem = async (req, res) => {
@@ -15,18 +16,20 @@ module.exports.createCartItem = async (req, res) => {
 
         if (item) return res.status(400).send("Item already exists in cart!");
 
-        const populatedCartItem = await CartItem.findOne({
-            user: req.user._id,
-            product: product,
-        }).populate("product", "name");
+        // const populatedCartItem = await CartItem.findOne({
+        //     user: req.user._id,
+        //     product: product,
+        // }).populate("product", "name");
 
-        const productName = populatedCartItem.product.name;
+        // const productName = populatedCartItem.product.name;
+
+        const getProduct = await Product.findById(product);
 
         let cartItem = new CartItem({
             price: price,
             product: product,
             user: req.user._id,
-            productName: productName,
+            productName: getProduct.name,
         });
 
         console.log("this is final cart item", cartItem);
