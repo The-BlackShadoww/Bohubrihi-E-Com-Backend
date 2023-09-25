@@ -32,7 +32,7 @@ module.exports.ipn = async (req, res) => {
             formData.append("val_id", val_id);
 
             const response = await fetch(
-                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
+                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&v=1&format=json`,
                 {
                     method: "GET",
                     mode: "cors",
