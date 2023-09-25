@@ -24,6 +24,7 @@
         "mongoose": "^7.5.0",
         "morgan": "^1.10.0",
         "node-fetch": "^3.3.2",
+        "node-fetch-commonjs": "^3.3.2",
         "ssl-commerz-node": "^1.0.4"
     },
     "engines": {
