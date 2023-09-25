@@ -4,6 +4,8 @@ const { CartItem } = require("../models/cartItem");
 //! -------------- Creating Cart -------------
 module.exports.createCartItem = async (req, res) => {
     try {
+        console.log("The request body => ", req.body);
+
         let { price, product } = _.pick(req.body, ["price", "product"]);
 
         const item = await CartItem.findOne({
