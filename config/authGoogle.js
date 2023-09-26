@@ -12,7 +12,42 @@ const strategy = new GoogleStrategy(
     },
     async (accessToken, refreshToken, profile, cb) => {
         console.log("profile: ", profile);
-        console.log("This is cb of Strategy");
+
+        let user = await User.findOne({
+            googleId: profile.id,
+            email: profile._json.email,
+        });
+
+        if (user) {
+            const token = user.generateJWT();
+
+            const response = {
+                user: _.pick(user, ["email", "_id"]),
+                token: token,
+            };
+
+            cb(null, response);
+
+            console.log("User exists :", user);
+        } else {
+            user = new User({
+                googleId: profile.id,
+                email: profile._json.email,
+            });
+
+            await user.save();
+
+            const token = user.generateJWT();
+
+            const response = {
+                user: _.pick(user, ["email", "_id"]),
+                token: token,
+            };
+
+            cb(null, response);
+
+            console.log("This is new user => ", user);
+        }
     }
 );
 
