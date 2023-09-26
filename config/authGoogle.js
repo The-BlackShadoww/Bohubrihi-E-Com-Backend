@@ -3,7 +3,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { User } = require("../models/user");
 const _ = require("lodash");
 
-const Strategy = new GoogleStrategy(
+const strategy = new GoogleStrategy(
     {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -16,4 +16,4 @@ const Strategy = new GoogleStrategy(
     }
 );
 
-passport.use(Strategy);
+passport.use(strategy);
