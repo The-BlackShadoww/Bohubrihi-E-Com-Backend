@@ -1,14 +1,13 @@
 const SSLCommerz = require("ssl-commerz-node");
 const PaymentSession = SSLCommerz.PaymentSession;
-
 const { CartItem } = require("../models/cartItem");
 const { Profile } = require("../models/profile");
 const { Order } = require("../models/order");
 const { Payment } = require("../models/payment");
 const path = require("path");
 const FormData = require("form-data");
-// const fetch = require("node-fetch");
-const fetch = require("node-fetch-commonjs");
+const fetch = require("node-fetch");
+// const fetch = require("node-fetch-commonjs");
 
 //! Request a session
 //! Payment process
@@ -26,10 +25,10 @@ module.exports.ipn = async (req, res) => {
             const val_id = payment["val_id"];
             console.log("validation ID => ", val_id);
 
-            // const formData = new FormData();
-            // formData.append("store_id", storeId);
-            // formData.append("store_passwd", storePassword);
-            // formData.append("val_id", val_id);
+            const formData = new FormData();
+            formData.append("store_id", storeId);
+            formData.append("store_passwd", storePassword);
+            formData.append("val_id", val_id);
 
             const fetchUrl = `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`;
 
@@ -49,7 +48,7 @@ module.exports.ipn = async (req, res) => {
 
             if (data.status === "VALID") {
                 console.log("Yup! The transaction is valid");
-                await Order.updateMany(
+                await Order.findOneAndUpdate(
                     { transaction_id: tran_id },
                     { status: "Complete", paymentStatus: data.status }
                 );
