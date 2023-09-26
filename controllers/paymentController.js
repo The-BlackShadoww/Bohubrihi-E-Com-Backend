@@ -31,17 +31,18 @@ module.exports.ipn = async (req, res) => {
             formData.append("store_passwd", storePassword);
             formData.append("val_id", val_id);
 
-            const response = await fetch(
-                `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`,
-                {
-                    method: "GET",
-                    mode: "cors",
-                    cache: "no-cache",
-                    credentials: "same-origin",
-                    redirect: "follow",
-                    referrer: "no-referrer",
-                }
-            );
+            const fetchUrl = `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`;
+
+            console.log("This is the fetch url => ", fetchUrl);
+
+            const response = await fetch(fetchUrl, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                redirect: "follow",
+                referrer: "no-referrer",
+            });
 
             const data = await response.json();
             console.log("This is ipn GET request data =>", data);
