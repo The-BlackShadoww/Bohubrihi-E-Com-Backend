@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const authorize = require("../middlewares/authorize");
 const passport = require("passport");
-// require("../config/authGoogle");
+require("../config/authGoogle");
 
 //* https://bohubrihi-e-com-backend-app.onrender.com/auth/google
 router
