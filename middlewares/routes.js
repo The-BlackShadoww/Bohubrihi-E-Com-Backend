@@ -22,5 +22,5 @@ module.exports = (app) => {
     app.use("/api/orders", orderRouter);
     app.use("/api/coupon", couponRouter);
     //todo ==> social login
-    app.use("/auth/google", socialAuthRouter);
+    // app.use("/auth/google", socialAuthRouter);
 };

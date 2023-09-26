@@ -1,54 +1,54 @@
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const { User } = require("../models/user");
-const _ = require("lodash");
+// const passport = require("passport");
+// const GoogleStrategy = require("passport-google-oauth20").Strategy;
+// const { User } = require("../models/user");
+// const _ = require("lodash");
 
-const strategy = new GoogleStrategy(
-    {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL:
-            "http://bohubrihi-e-com-backend-app.onrender.com/auth/google/redirect",
-    },
-    async (accessToken, refreshToken, profile, cb) => {
-        console.log("profile: ", profile);
+// const strategy = new GoogleStrategy(
+//     {
+//         clientID: process.env.GOOGLE_CLIENT_ID,
+//         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//         callbackURL:
+//             "http://bohubrihi-e-com-backend-app.onrender.com/auth/google/redirect",
+//     },
+//     async (accessToken, refreshToken, profile, cb) => {
+//         console.log("profile: ", profile);
 
-        let user = await User.findOne({
-            googleId: profile.id,
-            email: profile._json.email,
-        });
+//         let user = await User.findOne({
+//             googleId: profile.id,
+//             email: profile._json.email,
+//         });
 
-        if (user) {
-            const token = user.generateJWT();
+//         if (user) {
+//             const token = user.generateJWT();
 
-            const response = {
-                user: _.pick(user, ["email", "_id"]),
-                token: token,
-            };
+//             const response = {
+//                 user: _.pick(user, ["email", "_id"]),
+//                 token: token,
+//             };
 
-            cb(null, response);
+//             cb(null, response);
 
-            console.log("User exists :", user);
-        } else {
-            user = new User({
-                googleId: profile.id,
-                email: profile._json.email,
-            });
+//             console.log("User exists :", user);
+//         } else {
+//             user = new User({
+//                 googleId: profile.id,
+//                 email: profile._json.email,
+//             });
 
-            await user.save();
+//             await user.save();
 
-            const token = user.generateJWT();
+//             const token = user.generateJWT();
 
-            const response = {
-                user: _.pick(user, ["email", "_id"]),
-                token: token,
-            };
+//             const response = {
+//                 user: _.pick(user, ["email", "_id"]),
+//                 token: token,
+//             };
 
-            cb(null, response);
+//             cb(null, response);
 
-            console.log("This is new user => ", user);
-        }
-    }
-);
+//             console.log("This is new user => ", user);
+//         }
+//     }
+// );
 
-passport.use(strategy);
+// passport.use(strategy);
