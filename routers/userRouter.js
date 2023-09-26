@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const authorize = require("../middlewares/authorize");
+const passport = require("passport");
 const {
     signUp,
     signIn,
