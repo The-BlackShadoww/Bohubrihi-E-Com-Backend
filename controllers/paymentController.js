@@ -48,6 +48,8 @@ module.exports.ipn = async (req, res) => {
                     { status: "Complete", paymentStatus: data.status }
                 );
 
+                console.log("This is cart of the order: ",order.cartItems);
+
                 await CartItem.deleteMany(order.cartItems);
             } else {
                 await Order.deleteOne({ transaction_id: tran_id });
@@ -156,7 +158,6 @@ module.exports.initPayment = async (req, res) => {
         });
 
         response = await payment.paymentInit();
-        console.log("this is form paymentInit response: ", response);
 
         let order = new Order({
             cartItems: cartItems,
