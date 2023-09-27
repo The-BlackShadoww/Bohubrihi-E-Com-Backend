@@ -29,6 +29,7 @@ module.exports.Order = model(
                 ref: "User",
             },
             sessionKey: String,
+            paymentStatus: String,
         },
         { timestamps: true }
     )

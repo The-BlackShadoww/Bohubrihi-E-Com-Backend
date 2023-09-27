@@ -23,7 +23,6 @@ module.exports.ipn = async (req, res) => {
             const storeId = process.env.SSLCOMMERZ_STORE_ID;
             const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD;
             const val_id = payment["val_id"];
-            console.log("validation ID => ", val_id);
 
             const formData = new FormData();
             formData.append("store_id", storeId);
@@ -31,8 +30,6 @@ module.exports.ipn = async (req, res) => {
             formData.append("val_id", val_id);
 
             const fetchUrl = `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${storeId}&store_passwd=${storePassword}&format=json`;
-
-            console.log("This is the fetch url => ", fetchUrl);
 
             const response = await fetch(fetchUrl, {
                 method: "GET",
@@ -44,18 +41,16 @@ module.exports.ipn = async (req, res) => {
             });
 
             const data = await response.json();
-            console.log("This is ipn GET request data =>", data);
 
             if (data.status === "VALID") {
-                console.log("Yup! The transaction is valid");
-                await Order.findOneAndUpdate(
+                const order = await Order.findOneAndUpdate(
                     { transaction_id: tran_id },
                     { status: "Complete", paymentStatus: data.status }
                 );
+
                 await CartItem.deleteMany(order.cartItems);
             } else {
                 await Order.deleteOne({ transaction_id: tran_id });
-                console.log("Still the transaction is not valid");
             }
         } else {
             console.log("Payment is not valid");
@@ -65,7 +60,7 @@ module.exports.ipn = async (req, res) => {
 
         return res.status(200).send("IPN");
     } catch (err) {
-        console.log("this is catch error =>", err);
+        console.log("this is catch error => ", err);
     }
 };
 

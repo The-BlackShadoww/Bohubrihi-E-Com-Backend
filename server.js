@@ -28,12 +28,17 @@ app.listen(port, () => {
 
 // global.__basedir = __dirname;
 
+// const mongoDB = process.env.MONGODB_SERVER.replace(
+//     "<password>",
+//     process.env.MONGODB_PASSWORD
+// );
+
 // mongoose
-//     .connect(process.env.MONGODB_SERVER_LOCAL)
-//     .then(() => console.log("Successfully connected to Local MongoDB"))
+//     .connect(mongoDB)
+//     .then(() => console.log("Successfully connected to MongoDB"))
 //     .catch((err) => console.log(err, "MongoDB connection Failed!"));
 
-// const port = process.env.PORT || 3001;
+// const port = 3001;
 
 // app.listen(port, () => {
 //     console.log(`Backend App running on port ${port}`);
