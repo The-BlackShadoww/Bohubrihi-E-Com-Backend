@@ -48,9 +48,11 @@ module.exports.ipn = async (req, res) => {
                     { status: "Complete", paymentStatus: data.status }
                 );
 
-                console.log("This is cart of the order: ",order.cartItems);
+                console.log("This is cart of the order: ", order.cartItems);
 
-                await CartItem.deleteMany(order.cartItems);
+                for (item in order.cartItems) {
+                    await CartItem.deleteMany(order.cartItems[item]);
+                }
             } else {
                 await Order.deleteOne({ transaction_id: tran_id });
             }
