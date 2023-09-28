@@ -8,6 +8,7 @@ module.exports.getProfile = async (req, res) => {
 };
 
 module.exports.setProfile = async (req, res) => {
+    console.log("request body: ", req.body);
     const userId = req.user._id;
     const userProfile = _.pick(req.body, [
         "phone",
