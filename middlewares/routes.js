@@ -8,7 +8,6 @@ const paymentRouter = require("../routers/paymentRouter");
 const commentRouter = require("../routers/commentRouter");
 const orderRouter = require("../routers/orderRouter");
 const couponRouter = require("../routers/couponRouter");
-const socialAuthRouter = require("../routers/socialAuthRouter");
 
 module.exports = (app) => {
     app.use("/api/user", userRouter);
@@ -21,6 +20,4 @@ module.exports = (app) => {
     app.use("/api/comment", commentRouter);
     app.use("/api/orders", orderRouter);
     app.use("/api/coupon", couponRouter);
-    //todo ==> social login
-    // app.use("/auth/google", socialAuthRouter);
 };

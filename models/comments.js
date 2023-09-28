@@ -1,4 +1,3 @@
-//!======================== original =================================
 const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema({
@@ -10,14 +9,3 @@ const commentSchema = new mongoose.Schema({
 const Comments = mongoose.model("comment", commentSchema);
 
 module.exports = Comments;
-
-//!=========================================================
-// const { Schema, model } = require("mongoose");
-
-// const commentSchema = new Schema({
-//     user: String,
-//     productId: String,
-//     comment: String,
-// });
-
-// module.exports.Comments = model("comments", commentSchema);

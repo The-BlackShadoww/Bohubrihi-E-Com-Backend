@@ -50,7 +50,6 @@ module.exports.createProduct = async (req, res) => {
                         ]),
                     });
                 } catch (e) {
-                    // console.log(e);
                     // console.log(e._message);
                     return res.status(500).send("Internal Server error");
                 }
@@ -290,7 +289,7 @@ module.exports.getProductsSortedByReviews = async (req, res) => {
         const products = await Product.aggregate([
             {
                 $lookup: {
-                    from: "comments", //! Name of the Comment collection showed in mongoDB database.
+                    from: "comments", //! =>> Name of the Comment collection showed in mongoDB database.
                     localField: "_id",
                     foreignField: "product",
                     as: "comments",
