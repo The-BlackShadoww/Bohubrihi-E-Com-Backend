@@ -32,6 +32,7 @@ module.exports.Order = model(
                 type: Schema.Types.ObjectId,
                 ref: "User",
             },
+            discount: Number,
             sessionKey: String,
         },
         { timestamps: true }
