@@ -29,7 +29,11 @@ module.exports.Order = model(
                 ref: "User",
             },
             sessionKey: String,
-            paymentStatus: String,
+            paymentStatus: {
+                type: String,
+                default: "Invalid",
+                enum: ["Invalid", "Valid"],
+            },
         },
         { timestamps: true }
     )
