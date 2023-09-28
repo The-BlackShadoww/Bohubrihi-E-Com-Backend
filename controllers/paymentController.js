@@ -50,8 +50,11 @@ module.exports.ipn = async (req, res) => {
 
                 console.log("This is cart of the order: ", order.cartItems);
 
-                for (item in order.cartItems) {
-                    await CartItem.deleteMany(item);
+                for (const item of order.cartItems) {
+                    const itemId = item._id;
+                    const filter = { _id: itemId };
+
+                    await CartItem.deleteMany(filter);
                 }
             } else {
                 await Order.deleteOne({ transaction_id: tran_id });
