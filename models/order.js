@@ -24,16 +24,15 @@ module.exports.Order = model(
                 default: "Pending",
                 enum: ["Pending", "Complete"],
             },
+            paymentStatus: {
+                type: String,
+                default: "INVALID",
+            },
             user: {
                 type: Schema.Types.ObjectId,
                 ref: "User",
             },
             sessionKey: String,
-            paymentStatus: {
-                type: String,
-                default: "Invalid",
-                enum: ["Invalid", "Valid"],
-            },
         },
         { timestamps: true }
     )
