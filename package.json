@@ -29,8 +29,5 @@
         "passport": "^0.6.0",
         "passport-google-oauth20": "^2.0.0",
         "ssl-commerz-node": "^1.0.4"
-    },
-    "engines": {
-        "node": ">=16"
     }
 }
